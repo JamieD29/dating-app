@@ -1,8 +1,10 @@
 import 'package:dating_app/authenticationScreen/loginScreen.dart';
 import 'package:dating_app/controller/authenticationController.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +17,11 @@ void main() async {
         storageBucket: "dating-app-44e1f.appspot.com")).then((value){
       Get.put(AuthenticationController());
     });
-
+  await Permission.notification.isDenied.then((value){
+    if(value){
+      Permission.notification.request();
+    }
+  });
   runApp(const MyApp());
 }
 
@@ -25,6 +31,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return GetMaterialApp(
       title: 'Dating App',
       theme: ThemeData.dark().copyWith(
