@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dating_app/controller/profileController.dart';
 import 'package:dating_app/global.dart';
 import 'package:dating_app/tabScreens/userDetailsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SwippingScreen extends StatefulWidget {
   const SwippingScreen ({super.key});
@@ -16,6 +19,164 @@ class _SwippingScreen extends State<SwippingScreen> {
 
   ProfileController profileController = Get.put(ProfileController());
   String senderName ="";
+
+  startChattingInWhatsApp(String receiverPhoneNumber) async{
+    var androidUrl = "whatsapp://send?phone=$receiverPhoneNumber&text=Hi, I found your profile on dating app.";
+    var iosUrl ="https://wa.me/$receiverPhoneNumber?text=${Uri.parse('Hi, I found your profile on dating app.')}";
+
+    try{
+        if(Platform.isIOS){
+          await launchUrl((Uri.parse(iosUrl)));
+        }
+        else{
+          await launchUrl((Uri.parse(androidUrl)));
+        }
+    }
+    on Exception{
+      showDialog(
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: const Text("Whatsapp Not Found"),
+            content: const Text("Whatsapp is not installed."),
+            actions: [
+              TextButton(
+                  onPressed: (){
+                    Get.back();
+                  },
+                  child: const Text("Ok"))
+            ],
+          );
+        }
+      );
+    }
+  }
+
+  applyFilter(){
+    showDialog(
+        context: context,
+        builder: (BuildContext context)
+        {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setSetter){
+                return AlertDialog(
+                  title: const Text(
+                    "Matching Filter",
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text("I am looking for "),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DropdownButton<String>(
+                          hint: const Text("Select Gender"),
+                          value: chosenGender,
+                          underline: Container(),
+                          items: [
+                            'Male',
+                            'Female',
+                            'Others'
+                          ].map((value){
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(fontWeight: FontWeight.w500),
+                              )
+                            );
+                          }).toList(),
+                          onChanged: (String? value){
+                            setState(() {
+                              chosenGender = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+
+                      const Text("Live in "),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DropdownButton<String>(
+                          hint: const Text("Select Country"),
+                          value: chosenCountry,
+                          underline: Container(),
+                          items: [
+                            'Spain',
+                            'Vietnam',
+                            'USA',
+                            'Korea',
+                            'Japan'
+                          ].map((value){
+                            return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                )
+                            );
+                          }).toList(),
+                          onChanged: (String? value){
+                            setState(() {
+                              chosenCountry = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+
+                      const Text("with age "),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DropdownButton<String>(
+                          hint: const Text("Select age"),
+                          value: chosenAge,
+                          underline: Container(),
+                          items: [
+                            '18',
+                            '20',
+                            '25',
+                            '30',
+                            '35',
+                            '40',
+                            '45',
+                            '50',
+                            '55',
+                          ].map((value){
+                            return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                )
+                            );
+                          }).toList(),
+                          onChanged: (String? value){
+                            setState(() {
+                              chosenAge = value;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20,),
+                    ],
+                  ),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: (){
+                          Get.back();
+                          profileController.getResults();
+                        },
+                        child: const Text("Done")),
+                  ],
+                );
+              },
+          );
+        }
+    );
+  }
+
   readUserData()async{
     await FirebaseFirestore.instance.collection("Users").doc(currentUserID).get().then((dataSnapshot){
       setState(() {
@@ -61,7 +222,7 @@ class _SwippingScreen extends State<SwippingScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: IconButton(
                             onPressed: (){
-
+                              applyFilter();
                             },
                             icon: const Icon(
                               Icons.filter_list,
@@ -212,7 +373,7 @@ class _SwippingScreen extends State<SwippingScreen> {
                           //Chat
                           GestureDetector(
                             onTap: (){
-
+                              startChattingInWhatsApp(eachProfileInfo.phoneNo.toString());
                             },
                             child: Image.asset("images/chat.png", width: 70),
                           ),

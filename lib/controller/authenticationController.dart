@@ -55,7 +55,7 @@ class AuthenticationController extends GetxController
       //Personal Info
       File imageProfile, String email, String password,
       String name,
-      String age,String phoneNo,
+      String age, String gender, String phoneNo,
       String city,String country,
       String profileHeadings,String lookingForInaPartner,
       //Appearance
@@ -90,6 +90,7 @@ class AuthenticationController extends GetxController
         password: password,
         name: name,
         age: int.parse(age),
+        gender: gender.toLowerCase(),
           phoneNo: phoneNo,
           city: city,
           country: country,
