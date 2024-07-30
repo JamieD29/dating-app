@@ -108,8 +108,10 @@ class _FavSentFavReceivedScreenState extends State<FavSentFavReceivedScreen> {
         for(int i=0; i < otherFavSentDocument.docs.length; i++){
           otherFavSentList.add(otherFavSentDocument.docs[i].id);
         }
+
+        
         List.generate(otherFavSentList.length, (index){
-          otherFavSentList[index] == currentUserID ? matchedList.add(allUsersProfileList[i].uid) : null;
+            otherFavSentList[index] == currentUserID ? matchedList.add(allUsersProfileList[i].uid) : null;
         });
 
       }
@@ -121,18 +123,7 @@ class _FavSentFavReceivedScreenState extends State<FavSentFavReceivedScreen> {
   }
 
   getKeysDataFromUsersCollection(List<String> keysList)async{
-    // var allUsersDocument = await FirebaseFirestore.instance.collection("Users").get();
-    //
-    // for(int i=0; i < allUsersDocument.docs.length; i++){
-    //   for(int k=0 ; k<keysList.length; k++){
-    //     if(((allUsersDocument.docs[i].data() as dynamic)["uid"]) == keysList[k]){
-    //       favoriteList.add(allUsersDocument.docs[i].data());
-    //     }
-    //   }
-    // }
-    // setState(() {
-    //   favoriteList;
-    // });
+
     var allUsersDocument = await FirebaseFirestore.instance.collection("Users").get();
 
     for (int i = 0; i < allUsersDocument.docs.length; i++) {

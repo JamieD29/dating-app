@@ -20,37 +20,37 @@ class _SwippingScreen extends State<SwippingScreen> {
   ProfileController profileController = Get.put(ProfileController());
   String senderName ="";
 
-  startChattingInWhatsApp(String receiverPhoneNumber) async{
-    var androidUrl = "whatsapp://send?phone=$receiverPhoneNumber&text=Hi, I found your profile on dating app.";
-    var iosUrl ="https://wa.me/$receiverPhoneNumber?text=${Uri.parse('Hi, I found your profile on dating app.')}";
-
-    try{
-        if(Platform.isIOS){
-          await launchUrl((Uri.parse(iosUrl)));
-        }
-        else{
-          await launchUrl((Uri.parse(androidUrl)));
-        }
-    }
-    on Exception{
-      showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: const Text("Whatsapp Not Found"),
-            content: const Text("Whatsapp is not installed."),
-            actions: [
-              TextButton(
-                  onPressed: (){
-                    Get.back();
-                  },
-                  child: const Text("Ok"))
-            ],
-          );
-        }
-      );
-    }
-  }
+  // startChattingInWhatsApp(String receiverPhoneNumber) async{
+  //   var androidUrl = "whatsapp://send?phone=$receiverPhoneNumber&text=Hi, I found your profile on dating app.";
+  //   var iosUrl ="https://wa.me/$receiverPhoneNumber?text=${Uri.parse('Hi, I found your profile on dating app.')}";
+  //
+  //   try{
+  //       if(Platform.isIOS){
+  //         await launchUrl((Uri.parse(iosUrl)));
+  //       }
+  //       else{
+  //         await launchUrl((Uri.parse(androidUrl)));
+  //       }
+  //   }
+  //   on Exception{
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context){
+  //         return AlertDialog(
+  //           title: const Text("Whatsapp Not Found"),
+  //           content: const Text("Whatsapp is not installed."),
+  //           actions: [
+  //             TextButton(
+  //                 onPressed: (){
+  //                   Get.back();
+  //                 },
+  //                 child: const Text("Ok"))
+  //           ],
+  //         );
+  //       }
+  //     );
+  //   }
+  // }
 
   applyFilter(){
     showDialog(
@@ -371,12 +371,12 @@ class _SwippingScreen extends State<SwippingScreen> {
                           ),
 
                           //Chat
-                          GestureDetector(
-                            onTap: (){
-                              startChattingInWhatsApp(eachProfileInfo.phoneNo.toString());
-                            },
-                            child: Image.asset("images/chat.png", width: 70),
-                          ),
+                          // GestureDetector(
+                          //   onTap: (){
+                          //     startChattingInWhatsApp(eachProfileInfo.phoneNo.toString());
+                          //   },
+                          //   child: Image.asset("images/chat.png", width: 70),
+                          // ),
                           //Like
                           GestureDetector(
                             onTap: (){
